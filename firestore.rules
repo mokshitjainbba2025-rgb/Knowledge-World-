@@ -1,0 +1,178 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: site_content
+    // Document ID: settings (usually)
+    // Fields: heroTitle, heroSubtitle, contactPhone, contactEmail, contactAddress, whatsappNumber, googleMapsUrl, logoUrl, vision, mission, philosophy
+    //
+    // Collection: courses
+    // Fields: title, category, subjects, teachingMethod, batchSize, outcomes, order
+    //
+    // Collection: faculty
+    // Fields: name, qualification, experience, teachingStyle, photoUrl, order
+    //
+    // Collection: results
+    // Fields: studentName, score, board, year, achievement, photoUrl, isTopper
+    //
+    // Collection: testimonials
+    // Fields: name, role, content, videoUrl, rating
+    //
+    // Collection: gallery
+    // Fields: title, type, url, category, createdAt
+    //
+    // Collection: inquiries
+    // Fields: name, phone, class, board, message, status, createdAt
+    //
+    // Collection: blog
+    // Fields: title, content, author, publishedAt, imageUrl, tags
+    //
+    // Collection: users
+    // Fields: name, email, role, createdAt
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "mokshit.jain.bba2025@atlasskilltech.university" && request.auth.token.email_verified == true));
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidString(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+             request.resource.data[field].size() >= minLen &&
+             request.resource.data[field].size() <= maxLen;
+    }
+
+    function isValidUrl(url) {
+      return url is string && (url.matches("^https://.*") || url.matches("^http://.*"));
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidSiteContent() {
+      return hasOnlyAllowedFields(['heroTitle', 'heroSubtitle', 'contactPhone', 'contactEmail', 'contactAddress', 'whatsappNumber', 'googleMapsUrl', 'logoUrl', 'vision', 'mission', 'philosophy']);
+    }
+
+    function isValidCourse() {
+      return hasOnlyAllowedFields(['title', 'category', 'subjects', 'teachingMethod', 'batchSize', 'outcomes', 'order']) &&
+             isValidString('title', 1, 100) &&
+             request.resource.data.category in ["ICSE", "CBSE", "11th & 12th Science", "11th & 12th Commerce"];
+    }
+
+    function isValidFaculty() {
+      return hasOnlyAllowedFields(['name', 'qualification', 'experience', 'teachingStyle', 'photoUrl', 'order']) &&
+             isValidString('name', 1, 100);
+    }
+
+    function isValidResult() {
+      return hasOnlyAllowedFields(['studentName', 'score', 'board', 'year', 'achievement', 'photoUrl', 'isTopper']) &&
+             isValidString('studentName', 1, 100);
+    }
+
+    function isValidTestimonial() {
+      return hasOnlyAllowedFields(['name', 'role', 'content', 'videoUrl', 'rating']) &&
+             isValidString('name', 1, 100) &&
+             isValidString('content', 1, 1000);
+    }
+
+    function isValidGalleryItem() {
+      return hasOnlyAllowedFields(['title', 'type', 'url', 'category', 'createdAt']) &&
+             request.resource.data.type in ["image", "video"] &&
+             request.resource.data.category in ["Classroom", "Results", "Trips", "Events"];
+    }
+
+    function isValidInquiry() {
+      return hasOnlyAllowedFields(['name', 'phone', 'class', 'board', 'message', 'status', 'createdAt']) &&
+             isValidString('name', 1, 100) &&
+             isValidString('phone', 1, 20);
+    }
+
+    function isValidBlog() {
+      return hasOnlyAllowedFields(['title', 'content', 'author', 'publishedAt', 'imageUrl', 'tags']) &&
+             isValidString('title', 1, 200);
+    }
+
+    function isValidUser() {
+      return hasOnlyAllowedFields(['name', 'email', 'role', 'createdAt']) &&
+             isValidEmail(request.resource.data.email);
+    }
+
+    // ===============================================================
+    // Match Rules
+    // ===============================================================
+
+    match /site_content/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidSiteContent();
+    }
+
+    match /courses/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidCourse();
+    }
+
+    match /faculty/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidFaculty();
+    }
+
+    match /results/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidResult();
+    }
+
+    match /testimonials/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidTestimonial();
+    }
+
+    match /gallery/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidGalleryItem();
+    }
+
+    match /inquiries/{docId} {
+      allow create: if isValidInquiry();
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /blog/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidBlog();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow create: if isAuthenticated() && isOwner(userId) && isValidUser() && request.resource.data.role == 'user';
+      allow update: if isAuthenticated() && (isAdmin() || (isOwner(userId) && request.resource.data.role == resource.data.role)) && isValidUser();
+      allow delete: if isAdmin();
+    }
+  }
+}

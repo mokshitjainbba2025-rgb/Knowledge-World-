@@ -1,0 +1,131 @@
+{
+  "entities": {
+    "SiteContent": {
+      "title": "Site Content",
+      "description": "General settings and text content for the website.",
+      "type": "object",
+      "properties": {
+        "heroTitle": { "type": "string" },
+        "heroSubtitle": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "contactAddress": { "type": "string" },
+        "whatsappNumber": { "type": "string" },
+        "googleMapsUrl": { "type": "string" },
+        "logoUrl": { "type": "string" },
+        "vision": { "type": "string" },
+        "mission": { "type": "string" },
+        "philosophy": { "type": "string" }
+      }
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Educational courses offered by the institute.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string", "enum": ["ICSE", "CBSE", "11th & 12th Science", "11th & 12th Commerce"] },
+        "subjects": { "type": "string" },
+        "teachingMethod": { "type": "string" },
+        "batchSize": { "type": "string" },
+        "outcomes": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["title", "category"]
+    },
+    "Faculty": {
+      "title": "Faculty",
+      "description": "Teacher profiles.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "qualification": { "type": "string" },
+        "experience": { "type": "string" },
+        "teachingStyle": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["name"]
+    },
+    "Result": {
+      "title": "Result",
+      "description": "Student achievements and results.",
+      "type": "object",
+      "properties": {
+        "studentName": { "type": "string" },
+        "score": { "type": "string" },
+        "board": { "type": "string" },
+        "year": { "type": "string" },
+        "achievement": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "isTopper": { "type": "boolean" }
+      },
+      "required": ["studentName", "score"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Student and parent feedback.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "content": { "type": "string" },
+        "videoUrl": { "type": "string" },
+        "rating": { "type": "number" }
+      },
+      "required": ["name", "content"]
+    },
+    "GalleryItem": {
+      "title": "Gallery Item",
+      "description": "Photos and videos for the gallery.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["image", "video"] },
+        "url": { "type": "string" },
+        "category": { "type": "string", "enum": ["Classroom", "Results", "Trips", "Events"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["url", "category", "type"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "Form submissions from potential students.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "class": { "type": "string" },
+        "board": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string", "enum": ["new", "contacted", "closed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone"]
+    },
+    "BlogPost": {
+      "title": "Blog Post",
+      "description": "Educational blog posts.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "author": { "type": "string" },
+        "publishedAt": { "type": "string", "format": "date-time" },
+        "imageUrl": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["title", "content"]
+    }
+  },
+  "firestore": {
+    "site_content": { "schema": "SiteContent", "description": "Global site settings." },
+    "courses": { "schema": "Course", "description": "Courses offered." },
+    "faculty": { "schema": "Faculty", "description": "Teacher profiles." },
+    "results": { "schema": "Result", "description": "Student results." },
+    "testimonials": { "schema": "Testimonial", "description": "User feedback." },
+    "gallery": { "schema": "GalleryItem", "description": "Gallery media." },
+    "inquiries": { "schema": "Inquiry", "description": "Contact form submissions." },
+    "blog": { "schema": "BlogPost", "description": "Blog posts." }
+  }
+}
