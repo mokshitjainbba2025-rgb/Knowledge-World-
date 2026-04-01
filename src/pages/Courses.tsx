@@ -4,6 +4,7 @@ import { BookOpen, Users, Target, CheckCircle2, ArrowRight, Star } from 'lucide-
 import { db, collection, onSnapshot, query, orderBy } from '../firebase';
 import { Course } from '../types';
 import { cn } from '../lib/utils';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 const categories = ["ICSE", "CBSE", "11th & 12th Science", "11th & 12th Commerce"];
 
@@ -11,6 +12,7 @@ export default function Courses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [activeCategory, setActiveCategory] = useState(categories[0]);
   const [loading, setLoading] = useState(true);
+  const { content } = useSiteContent();
 
   useEffect(() => {
     const q = query(collection(db, 'courses'), orderBy('order', 'asc'));
@@ -33,7 +35,7 @@ export default function Courses() {
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 px-4 py-2 rounded-full text-primary text-xs font-bold tracking-widest uppercase"
           >
-            <BookOpen size={14} />
+            < BookOpen size={14} />
             Our Academic Programs
           </motion.div>
           <motion.h1
@@ -186,7 +188,7 @@ export default function Courses() {
             <button className="w-full sm:w-auto bg-primary text-bg-dark px-10 py-4 rounded-full font-bold text-lg glow-gold hover:bg-primary-light transition-all">
               Schedule Consultation
             </button>
-            <a href="tel:+911234567890" className="w-full sm:w-auto text-white font-bold flex items-center gap-2 hover:text-primary transition-colors">
+            <a href={`tel:${content?.contactPhone || "+911234567890"}`} className="w-full sm:w-auto text-white font-bold flex items-center gap-2 hover:text-primary transition-colors">
               <Users size={20} className="text-primary" /> Talk to Academic Counselor
             </a>
           </div>

@@ -4,6 +4,7 @@ import { CheckCircle2, Users, Target, BookOpen, ArrowRight, Star, Quote, Phone, 
 import { useState, useEffect } from 'react';
 import { db, collection, getDocs, query, orderBy, limit, onSnapshot, where } from '../firebase';
 import { Course, Testimonial, Result } from '../types';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 const highlights = [
   { title: 'ICSE', subtitle: 'Classes 6-10', icon: BookOpen },
@@ -29,6 +30,7 @@ const journeySteps = [
 export default function Home() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [results, setResults] = useState<Result[]>([]);
+  const { content } = useSiteContent();
 
   useEffect(() => {
     const qT = query(collection(db, 'testimonials'), limit(3));
@@ -64,16 +66,15 @@ export default function Home() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="space-y-8"
           >
-            <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 px-4 py-2 rounded-full text-primary text-xs font-bold tracking-widest uppercase">
+            <div className="inline-flex items-center gap-5 bg-primary/10 border border-primary/20 px-4 py-2 rounded-full text-primary text-xs font-bold tracking-widest uppercase">
               <Star size={14} className="fill-primary" />
               Surat's Premier Coaching Institute
             </div>
             <h1 className="text-5xl md:text-7xl font-display font-bold leading-tight text-white">
-              Building Strong <span className="text-gradient-gold">Foundations.</span> <br />
-              Creating Future <span className="text-gradient-gold">Leaders.</span>
+              {content?.heroTitle || "Building Strong Foundations. Creating Future Leaders."}
             </h1>
             <p className="text-gray-400 text-lg md:text-xl max-w-xl leading-relaxed">
-              Expert coaching for ICSE, CBSE, and Classes 11 & 12. We focus on concept-based learning to ensure your child's success.
+              {content?.heroSubtitle || "Expert coaching for ICSE, CBSE, and Classes 11 & 12. We focus on concept-based learning to ensure your child's success."}
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
               <Link
@@ -83,7 +84,7 @@ export default function Home() {
                 Book Free Demo <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <a
-                href="tel:+911234567890"
+                href={`tel:${content?.contactPhone || "+911234567890"}`}
                 className="w-full sm:w-auto bg-white/5 border border-white/10 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2"
               >
                 <Phone size={20} /> Call Now
@@ -343,7 +344,7 @@ export default function Home() {
                 Book Free Demo
               </Link>
               <a
-                href="tel:+911234567890"
+                href={`tel:${content?.contactPhone || "+911234567890"}`}
                 className="w-full sm:w-auto bg-transparent border-2 border-bg-dark/20 text-bg-dark px-12 py-5 rounded-full font-bold text-xl hover:bg-bg-dark/10 transition-all flex items-center justify-center gap-2"
               >
                 <Phone size={24} /> Call Now

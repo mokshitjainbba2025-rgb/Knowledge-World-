@@ -1,16 +1,23 @@
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Instagram, Facebook, Youtube, Send } from 'lucide-react';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 export default function Footer() {
+  const { content } = useSiteContent();
+
   return (
     <footer className="bg-bg-card border-t border-primary/10 pt-16 pb-8 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         {/* Brand */}
         <div className="space-y-6">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center glow-gold">
-              <span className="text-bg-dark font-display font-bold text-xl">K</span>
-            </div>
+            {content?.logoUrl ? (
+              <img src={content.logoUrl} alt="Logo" className="w-10 h-10 object-contain glow-gold" referrerPolicy="no-referrer" />
+            ) : (
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center glow-gold">
+                <span className="text-bg-dark font-display font-bold text-xl">K</span>
+              </div>
+            )}
             <div>
               <h1 className="text-white font-display font-bold text-lg leading-tight tracking-wider">
                 KNOWLEDGE WORLD
@@ -56,15 +63,21 @@ export default function Footer() {
           <ul className="space-y-4">
             <li className="flex items-start gap-3">
               <MapPin className="text-primary shrink-0" size={18} />
-              <span className="text-gray-400 text-sm">123, Knowledge Plaza, Adajan, Surat, Gujarat - 395009</span>
+              <span className="text-gray-400 text-sm">
+                {content?.contactAddress || "123, Knowledge Plaza, Adajan, Surat, Gujarat - 395009"}
+              </span>
             </li>
             <li className="flex items-center gap-3">
               <Phone className="text-primary shrink-0" size={18} />
-              <a href="tel:+919824197667" className="text-gray-400 hover:text-primary transition-colors text-sm">+91 12345 67890</a>
+              <a href={`tel:${content?.contactPhone || "+911234567890"}`} className="text-gray-400 hover:text-primary transition-colors text-sm">
+                {content?.contactPhone || "+91 12345 67890"}
+              </a>
             </li>
             <li className="flex items-center gap-3">
               <Mail className="text-primary shrink-0" size={18} />
-              <a href="mailto:info@knowledgeworld.com" className="text-gray-400 hover:text-primary transition-colors text-sm">info@knowledgeworld.com</a>
+              <a href={`mailto:${content?.contactEmail || "info@knowledgeworld.com"}`} className="text-gray-400 hover:text-primary transition-colors text-sm">
+                {content?.contactEmail || "info@knowledgeworld.com"}
+              </a>
             </li>
           </ul>
         </div>

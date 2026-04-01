@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, Phone, MessageSquare } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -19,6 +20,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { content } = useSiteContent();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,9 +43,13 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center glow-gold">
-            <span className="text-bg-dark font-display font-bold text-xl">K</span>
-          </div>
+          {content?.logoUrl ? (
+            <img src={content.logoUrl} alt="Logo" className="w-20 h-20 object-contain glow-gold" referrerPolicy="no-referrer" />
+          ) : (
+            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center glow-gold">
+              <span className="text-bg-dark font-display font-bold text-xl">K</span>
+            </div>
+          )}
           <div className="hidden sm:block">
             <h1 className="text-white font-display font-bold text-lg leading-tight tracking-wider">
               KNOWLEDGE WORLD
@@ -109,7 +115,7 @@ export default function Navbar() {
               ))}
               <div className="flex flex-col gap-3 mt-4">
                 <a
-                  href="tel:+911234567890"
+                  href={`tel:${content?.contactPhone || "+911234567890"}`}
                   className="flex items-center justify-center gap-2 bg-white/5 text-white py-3 rounded-xl border border-white/10"
                 >
                   <Phone size={18} /> Call Now

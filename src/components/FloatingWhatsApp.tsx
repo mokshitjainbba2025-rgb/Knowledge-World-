@@ -1,8 +1,10 @@
 import { MessageSquare } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 export default function FloatingWhatsApp() {
-  const phoneNumber = '919824197667'; // Replace with actual number
+  const { content } = useSiteContent();
+  const phoneNumber = content?.whatsappNumber || '919824197667';
   const message = 'Hello Knowledge World, I am interested in your courses.';
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
