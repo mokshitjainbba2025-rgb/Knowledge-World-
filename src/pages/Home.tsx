@@ -66,9 +66,21 @@ export default function Home() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="space-y-8"
           >
-            <div className="inline-flex items-center gap-5 bg-primary/10 border border-primary/20 px-4 py-2 rounded-full text-primary text-xs font-bold tracking-widest uppercase">
-              <Star size={14} className="fill-primary" />
-              Surat's Premier Coaching Institute
+            <div className="flex flex-col gap-6">
+              {content?.logoUrl && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="w-24 h-24 bg-white rounded-full p-1 flex items-center justify-center shadow-2xl border border-primary/20 glow-gold"
+                >
+                  <img src={content.logoUrl} alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                </motion.div>
+              )}
+              <div className="inline-flex items-center self-start gap-5 bg-primary/10 border border-primary/20 px-4 py-2 rounded-full text-primary text-xs font-bold tracking-widest uppercase">
+                <Star size={14} className="fill-primary" />
+                Surat's Premier Coaching Institute
+              </div>
             </div>
             <h1 className="text-5xl md:text-7xl font-display font-bold leading-tight text-white">
               {content?.heroTitle || "Building Strong Foundations. Creating Future Leaders."}

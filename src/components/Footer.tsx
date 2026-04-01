@@ -10,12 +10,14 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         {/* Brand */}
         <div className="space-y-6">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-3">
             {content?.logoUrl ? (
-              <img src={content.logoUrl} alt="Logo" className="w-10 h-10 object-contain glow-gold" referrerPolicy="no-referrer" />
+              <div className="w-16 h-16 bg-white rounded-full p-1 flex items-center justify-center shadow-lg border border-primary/20 overflow-hidden">
+                <img src={content.logoUrl} alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+              </div>
             ) : (
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center glow-gold">
-                <span className="text-bg-dark font-display font-bold text-xl">K</span>
+              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center glow-gold">
+                <span className="text-bg-dark font-display font-bold text-2xl">K</span>
               </div>
             )}
             <div>

@@ -11,7 +11,8 @@ export default function AdminSiteContent() {
   const [isSaving, setIsSaving] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<SiteContent>();
+  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<SiteContent>();
+  const logoUrl = watch('logoUrl');
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, 'site_content', 'settings'), (snapshot) => {
@@ -100,10 +101,23 @@ export default function AdminSiteContent() {
             </div>
             <div className="space-y-2">
               <label className="text-gray-500 text-xs font-bold uppercase tracking-widest">Logo URL</label>
-              <input
-                {...register('logoUrl')}
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary transition-all"
-              />
+              <div className="flex items-center gap-4">
+                <input
+                  {...register('logoUrl')}
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary transition-all"
+                  placeholder="https://example.com/logo.png"
+                />
+                {logoUrl && (
+                  <div className="w-12 h-12 bg-white rounded-full p-1 flex items-center justify-center shadow-md border border-primary/20 overflow-hidden shrink-0">
+                    <img 
+                      src={logoUrl} 
+                      onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/150')}
+                      alt="Preview" 
+                      className="w-full h-full object-contain" 
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

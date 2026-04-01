@@ -42,12 +42,14 @@ export default function Navbar() {
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-3">
           {content?.logoUrl ? (
-            <img src={content.logoUrl} alt="Logo" className="w-20 h-20 object-contain glow-gold" referrerPolicy="no-referrer" />
+            <div className="w-14 h-14 bg-white rounded-full p-1 flex items-center justify-center shadow-md border border-primary/20 overflow-hidden">
+              <img src={content.logoUrl} alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+            </div>
           ) : (
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center glow-gold">
-              <span className="text-bg-dark font-display font-bold text-xl">K</span>
+            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center glow-gold">
+              <span className="text-bg-dark font-display font-bold text-2xl">K</span>
             </div>
           )}
           <div className="hidden sm:block">
