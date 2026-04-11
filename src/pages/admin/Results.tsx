@@ -24,10 +24,14 @@ export default function AdminResults() {
 
   const onSubmit = async (data: Result) => {
     try {
+      // Sanitize data to remove 'id' before sending to Firestore
+      const { id, ...sanitizedData } = data as any;
+      const payload = { ...sanitizedData, isTopper: Boolean(data.isTopper) };
+
       if (editingResult) {
-        await updateDoc(doc(db, 'results', editingResult.id), { ...data, isTopper: Boolean(data.isTopper) });
+        await updateDoc(doc(db, 'results', editingResult.id), payload);
       } else {
-        await addDoc(collection(db, 'results'), { ...data, isTopper: Boolean(data.isTopper) });
+        await addDoc(collection(db, 'results'), payload);
       }
       setIsModalOpen(false);
       setEditingResult(null);

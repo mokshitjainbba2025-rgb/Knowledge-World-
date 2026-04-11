@@ -26,8 +26,10 @@ export default function AdminGallery() {
 
   const onSubmit = async (data: GalleryItem) => {
     try {
+      // Sanitize data to remove 'id' before sending to Firestore
+      const { id, ...sanitizedData } = data as any;
       const payload = {
-        ...data,
+        ...sanitizedData,
         createdAt: editingItem ? editingItem.createdAt : new Date().toISOString()
       };
       if (editingItem) {

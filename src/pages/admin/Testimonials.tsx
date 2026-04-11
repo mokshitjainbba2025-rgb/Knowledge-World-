@@ -24,8 +24,10 @@ export default function AdminTestimonials() {
 
   const onSubmit = async (data: Testimonial) => {
     try {
+      // Sanitize data to remove 'id' before sending to Firestore
+      const { id, ...sanitizedData } = data as any;
       const payload = {
-        ...data,
+        ...sanitizedData,
         rating: Number(data.rating) || 5
       };
       if (editingTestimonial) {

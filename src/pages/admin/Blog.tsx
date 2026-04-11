@@ -25,9 +25,11 @@ export default function AdminBlog() {
 
   const onSubmit = async (data: BlogPost) => {
     try {
+      // Sanitize data to remove 'id' before sending to Firestore
+      const { id, ...sanitizedData } = data as any;
       const tags = typeof data.tags === 'string' ? (data.tags as string).split(',').map(t => t.trim()) : data.tags;
       const payload = {
-        ...data,
+        ...sanitizedData,
         tags,
         publishedAt: editingPost ? editingPost.publishedAt : new Date().toISOString()
       };

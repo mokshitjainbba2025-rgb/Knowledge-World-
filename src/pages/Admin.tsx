@@ -157,7 +157,7 @@ export default function AdminPage() {
             return (
               <Link
                 key={link.path}
-                to={link.path}
+                to={`/admin${link.path ? '/' + link.path : ''}`}
                 className={cn(
                   "flex items-center gap-4 px-4 py-3 rounded-xl transition-all group",
                   isActive 

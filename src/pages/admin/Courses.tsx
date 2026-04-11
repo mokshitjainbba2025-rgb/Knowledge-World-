@@ -26,10 +26,14 @@ export default function AdminCourses() {
 
   const onSubmit = async (data: Course) => {
     try {
+      // Sanitize data to remove 'id' before sending to Firestore
+      const { id, ...sanitizedData } = data as any;
+      const payload = { ...sanitizedData, order: Number(data.order) || courses.length + 1 };
+
       if (editingCourse) {
-        await updateDoc(doc(db, 'courses', editingCourse.id), { ...data, order: Number(data.order) });
+        await updateDoc(doc(db, 'courses', editingCourse.id), payload);
       } else {
-        await addDoc(collection(db, 'courses'), { ...data, order: Number(data.order) || courses.length + 1 });
+        await addDoc(collection(db, 'courses'), payload);
       }
       setIsModalOpen(false);
       setEditingCourse(null);

@@ -27,7 +27,9 @@ export default function AdminSiteContent() {
   const onSubmit = async (data: SiteContent) => {
     setIsSaving(true);
     try {
-      await setDoc(doc(db, 'site_content', 'settings'), data);
+      // Sanitize data to remove 'id' before sending to Firestore
+      const { id, ...sanitizedData } = data as any;
+      await setDoc(doc(db, 'site_content', 'settings'), sanitizedData);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (error) {
